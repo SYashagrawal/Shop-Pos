@@ -155,7 +155,7 @@ function showLogin(msg) {
     await busy(btn, async () => {
       const username = $('#lu').value.trim().toLowerCase();
       const { error } = await sb.auth.signInWithPassword({ email: `${username}@${CFG.LOGIN_DOMAIN}`, password: $('#lp').value });
-      if (error) { toast('Wrong username or password', 'err'); return; }
+      if (error) { toast('Login failed: ' + error.message, 'err'); console.error(error); return; }
       await enterApp();
     });
   };
