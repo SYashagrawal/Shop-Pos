@@ -607,8 +607,9 @@ async function openOrderDetail(id, onChange) {
       $('#od-pdf', root).onclick = (e) => busy(e.currentTarget, () => downloadInvoice(id));
       const paid = $('#od-paid', root);
       if (paid) paid.onclick = async (e) => {
+        const btn = e.currentTarget;
         if (!(await confirmBox('Mark as paid', 'Confirm that the customer has paid this credit bill?', 'Yes, paid'))) return;
-        await busy(e.currentTarget, async () => {
+        await busy(btn, async () => {
           const { error } = await sb.rpc('mark_paid', { p_order: id });
           if (error) return toast(error.message, 'err');
           toast('Marked as paid', 'ok'); close(); onChange && onChange();
@@ -616,9 +617,10 @@ async function openOrderDetail(id, onChange) {
       };
       const cancel = $('#od-cancel', root);
       if (cancel) cancel.onclick = async (e) => {
+        const btn = e.currentTarget;
         const reason = await confirmBox('Cancel this order?', 'The stock of all items will be added back to the outlet. This cannot be undone.', 'Cancel order', true, true);
         if (!reason) return;
-        await busy(e.currentTarget, async () => {
+        await busy(btn, async () => {
           const { error } = await sb.rpc('cancel_order', { p_order: id, p_reason: reason === true ? null : reason });
           if (error) return toast(error.message, 'err');
           toast('Order cancelled and stock restored', 'ok'); close(); onChange && onChange();
